@@ -1,8 +1,26 @@
 from rich.console import Console
 import secrets
 import string
+import json
+import os
+
 
 console = Console()
+
+
+DB_FILE = "vault.json"
+
+def load_vault():
+    if os.path.exists(DB_FILE):
+        with open(DB_FILE) as f:
+            return json.load(f)
+    return {}
+
+def save_vault(vault):
+    with open(DB_FILE, "w") as f:
+        json.dump(vault, f, indent=4)
+
+
 
 def generate_random_password(pwlength=16):
     chars = string.ascii_letters + string.digits + "!@#$%^&*()-_=+"
@@ -10,6 +28,11 @@ def generate_random_password(pwlength=16):
 
 def main():
     console.print("[bold cyan]💎 Welcome - Password Vault[/bold cyan]")
+
+
+
+
+
 
     while True:
         print("\n1. See every Entry")
@@ -30,6 +53,24 @@ def main():
                 length = int(length)
             else:
                 length = 16
+
+        elif choice == "3":
+
+            app = input("App/Website: ")
+            username = input("Username: ")
+            password = input("Password: ")
+            notes = input("Notes: ")
+
+
+            vault = load_vault()
+
+            vault[app] = {
+                "username": username,
+                "password": password,
+                "notes": notes
+            }
+
+            save_vault(vault)
 
             print(generate_random_password(length))
         else:
