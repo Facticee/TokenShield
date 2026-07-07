@@ -4,6 +4,7 @@ import string
 import json
 import os
 
+from rich.table import Table
 
 console = Console()
 
@@ -32,7 +33,7 @@ def main():
 
 
 
-
+    vault = load_vault()
 
     while True:
         print("\n1. See every Entry")
@@ -43,36 +44,63 @@ def main():
 
         choice = input("Choice: ")
 
-        if choice == "5":
-            print("Programm closed.")
-            break
-        elif choice == "4":
-            length = input("Length (Default 16): ")
+        if choice == "1":
+            if not vault["entries"]:
+                console.print("[yellow]No entries yet.[/yellow]")
+                continue
+            table = Table(title="All saved Entries", show_lines=True)
+            table.add_column("Website / App Name", style="cyan", no_wrap=True)
+            table.add_column("Email / Username", style="yellow")
+            table.add_column("Password", style="magenta")
+            table.add_column("Notes", style="green")
 
-            if length.isdigit():
-                length = int(length)
-            else:
-                length = 16
+            for app, details in vault["entries"].items():
+                table.add_row(app, details.get("username", "-"), "••••••••", details.get("notes", "-"))
+            console.print(table)
+
+        elif choice == "2":
+            if not vault["entries"]:
+                console.print("[yellow]No entries yet.[/yellow]")
+                continue
+            search_query = input("Enter Name: ").strip()
+            found_entries = {k: v for k, v in vault["entries"].items() if search_query.lower() in k.lower()}
+
+            if not found_entries:
+                console.print(f"[yellow]No Entry found for '{search_query}'.[/yellow]")
+                continue
+
+            table = Table(title=f"Search for '{search_query}'", show_lines=True)
+            table.add_column("Website / App Name", style="cyan", no_wrap=True)
+            table.add_column("Email / Username", style="yellow")
+            table.add_column("Password", style="magenta")
+            table.add_column("Notes", style="green")
+
+            for app, details in found_entries.items():
+                table.add_row(app, details.get("username", "-"), details.get("password", "-"), details.get("notes", "-"))
+            console.print(table)
 
         elif choice == "3":
+            app_name = input("Name of Website / App: ").strip()
+            username = input("Username / Email: ").strip()
+            password = input("Password (leave empty for random generated password): ").strip()
+            if not password:
+                password = generate_random_password()
+                console.print(f"[bold green]Generated Password:[/bold green] {password}")
+            notes = input("Notes (optional): ").strip() or "-"
 
-            app = input("App/Website: ")
-            username = input("Username: ")
-            password = input("Password: ")
-            notes = input("Notes: ")
-
-
-            vault = load_vault()
-
-            vault[app] = {
-                "username": username,
-                "password": password,
-                "notes": notes
-            }
-
+            vault["entries"][app_name] = {"username": username, "password": password, "notes": notes}
             save_vault(vault)
+            console.print(f" {app_name} was added!")
 
-            print(generate_random_password(length))
+        elif choice == "4":
+            length_str = input("Password Length (Default 16): ").strip()
+            length = int(length_str) if length_str.isdigit() else 16
+            generated_pw = generate_random_password(length)
+            console.print(f"\n---- Random Password ----\n {generated_pw} \n------------------------------")
+        elif choice == "5":
+            console.print("Programm closed.")
+            break
+
         else:
             print("Test")
 
