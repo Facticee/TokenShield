@@ -172,7 +172,7 @@ def main():
 
             save_vault(master_pw, vault)
             console.print(f"[bold green]✅ {app_name} was added![/bold green]")
-
+            continue
 
         elif choice == "4":
             length_str = input("Password Length (Default 16): ").strip()
