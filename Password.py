@@ -1,3 +1,5 @@
+import getpass
+
 from rich.console import Console
 import secrets
 import string
@@ -81,15 +83,23 @@ def main():
 
         elif choice == "3":
             app_name = input("Name of Website / App: ").strip()
+            if not app_name:
+                console.print("[red]Name darf nicht leer sein![/red]") # so it wont cause issues with the searching for entriys later
+                continue
+
             username = input("Username / Email: ").strip()
-            password = input("Password (leave empty for random generated password): ").strip()
+
+            password = getpass.getpass("Password (leave empty for random generated password): ").strip()
             if not password:
                 password = generate_random_password()
                 console.print(f"[bold green]Generated Password:[/bold green] {password}")
-            notes = input("Notes (optional): ").strip() or "-"
+
+            notes = input("Notes (optional): ").strip() or ""
 
             vault["entries"][app_name] = {"username": username, "password": password, "notes": notes}
+
             save_vault(vault)
+
             console.print(f" {app_name} was added!")
 
         elif choice == "4":
