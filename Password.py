@@ -11,6 +11,9 @@ from platformdirs import PlatformDirs
 from rich.console import Console
 from rich.table import Table
 
+
+from totp_handler import generate_current_totp
+
 console = Console()
 
 dirs = PlatformDirs("TokenShield", ensure_exists=True)
