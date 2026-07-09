@@ -7,11 +7,14 @@ import getpass  # Ermöglicht die komplett verdeckte Passworteingabe im Terminal
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from platformdirs import PlatformDirs
 from rich.console import Console
 from rich.table import Table
 
 console = Console()
-DB_FILE = "vault.json"
+
+dirs = PlatformDirs("TokenShield", ensure_exists=True)
+DB_FILE = os.path.join(dirs.user_data_dir, "vault.json")
 
 def get_encryption_key(master_password: str, salt: bytes) -> bytes:
 
