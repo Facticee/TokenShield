@@ -78,13 +78,13 @@ When you run the program for the first time, it will ask you to set a Master Pas
 7. **Close:** Closes the application.
 
 ## Security Specifications
-1.KDF: PBKDF2HMAC (SHA256)
+1. KDF: PBKDF2HMAC (SHA256)
 
-2.Cycles: 480,000
+2. Cycles: 480,000
 
-3.Encryption standard: Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication)
+3. Encryption standard: Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication)
 
-4.Storage Location: Handled by platformdirs: 
+4. Storage Location: Handled by platformdirs: 
 
 
 **Windows:** ` C:\Users\<user>\AppData\Local\TokenShield `
