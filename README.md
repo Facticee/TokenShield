@@ -89,4 +89,4 @@ When you run the program for the first time, it will ask you to set a Master Pas
 
 
 ## License
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
