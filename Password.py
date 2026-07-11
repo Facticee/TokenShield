@@ -227,6 +227,7 @@ def main():
             vault["entries"][app_name] = {
                 "username": username,
                 "password": password,
+                "totp_secret": totp_secret,
                 "notes": notes
             }
 
