@@ -77,6 +77,18 @@ When you run the program for the first time, it will ask you to set a Master Pas
 
 7. **Close:** Closes the application.
 
+## Test the TOTP 2FA
+1. Download the QR Code and copy the path.
+<img width="200" height="200" alt="totp-qr-code" src="https://github.com/user-attachments/assets/3949e5b3-25e3-4684-b426-ed799f9cb32f" />
+2. Run the sript and choose "Add Entry" 
+
+3. Enter the requested information.
+   When you are asked if you want to enter a QR Code, type " y " and press Enter.
+
+4. Paste the path and enter.
+
+5. Then choose option 1 "See every Entry" and you will see the current code in your entry!
+
 ## Security Specifications
 1. KDF: PBKDF2HMAC (SHA256)
 
