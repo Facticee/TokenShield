@@ -1,11 +1,11 @@
 import pyotp
 
 def generate_current_totp(secret: str) -> str:
-    
+
     if not secret or secret == "-":
         return "-"
     try:
         totp = pyotp.TOTP(secret)
-        return totp.now()  # Generiert den aktuellen Code für genau diese Sekunde
+        return totp.now()
     except Exception:
-        return "Fehler"
+        return "Error"

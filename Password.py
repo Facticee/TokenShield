@@ -11,7 +11,7 @@ from platformdirs import PlatformDirs
 from rich.console import Console
 from rich.table import Table
 
-
+from qr_handler import extract_totp_secret_from_qr
 from totp_handler import generate_current_totp
 
 console = Console()
@@ -77,14 +77,14 @@ def change_master_password(current_pw: str, vault: dict) -> str:
 
     confirm_pw = getpass.getpass("Confirm new Master Password: ").strip()
     if new_pw != confirm_pw:
-        console.print("[red]❌ Error: Passwords do not match![/red]")
+        console.print("[red]❌ Passwords do not match![/red]")
         return current_pw
 
     new_salt = os.urandom(16)
     vault["salt"] = base64.b64encode(new_salt).decode()
 
     save_vault(new_pw, vault)
-    console.print("[bold green]✅ Master Password successfully changed and vault re-encrypted![/bold green]")
+    console.print("[bold green]✅ Master Password changed![/bold green]")
     return new_pw
 
 
@@ -125,17 +125,22 @@ def main():
                 console.print("[yellow]No entries yet.[/yellow]")
                 continue
 
-            table = Table(title="All saved Entries", show_lines=True)
+            table = Table(title="All saved Entries (for Password, choose 2 and search for entry)", show_lines=True)
             table.add_column("Website / App Name", style="cyan", no_wrap=True)
             table.add_column("Email / Username", style="yellow")
             table.add_column("Password", style="magenta")
+            table.add_column("2FA Code", style="bold yellow")
             table.add_column("Notes", style="green")
 
             for app, details in vault["entries"].items():
+
+                current_code = generate_current_totp(details.get("totp_secret", "-"))
+
                 table.add_row(
                     app,
                     details.get("username", "-"),
                     "••••••••",
+                    current_code,
                     details.get("notes", "-")
                 )
 
@@ -160,16 +165,21 @@ def main():
                 continue
 
             table = Table(title=f"Search for '{search_query}'", show_lines=True)
-            table.add_column("Website / App", style="cyan", no_wrap=True)
-            table.add_column("Benutzername", style="yellow")
-            table.add_column("Passwort", style="magenta")
-            table.add_column("Notizen", style="green")
+            table.add_column("Website / App Name", style="cyan", no_wrap=True)
+            table.add_column("Email / Username", style="yellow")
+            table.add_column("Password", style="magenta")
+            table.add_column("2FA Code", style="bold yellow")
+            table.add_column("Notes", style="green")
 
             for app, details in found_entries.items():
+
+                current_code = generate_current_totp(details.get("totp_secret", "-"))
+
                 table.add_row(
                     app,
                     details.get("username", "-"),
                     details.get("password", "-"),
+                    current_code,
                     details.get("notes", "-")
                 )
 
@@ -192,6 +202,27 @@ def main():
             notes = input("Notes (optional): ").strip()
             if not notes:
                 notes = "-"
+
+
+
+
+            add_2fa = input("Do you want to enter a QR Code for 2FA? (y/n): ").strip().lower()
+            totp_secret = "-"
+
+            if add_2fa == 'y':
+                qr_path = input("Path to QR Code Image: ").strip()
+                qr_path = qr_path.strip('"').strip("'")
+
+                secret = extract_totp_secret_from_qr(qr_path)
+                if secret:
+                    totp_secret = secret
+                    console.print("[bold green]✅ 2FA-Code added![/bold green]")
+                else:
+                    console.print("[yellow]Entry without 2FA[/yellow]")
+
+
+
+
 
             vault["entries"][app_name] = {
                 "username": username,
