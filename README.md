@@ -27,6 +27,9 @@ winget install -e --id Python.Python.3
 sudo apt update && sudo apt install -y python3 python3-pip
 ```
 
+#### macOS: Through the python website linked above is the best option 
+
+
 ### 2. Install Dependencies
 
 ```
@@ -75,18 +78,20 @@ When you run the program for the first time, it will ask you to set a Master Pas
 7. **Close:** Closes the application.
 
 ## Security Specifications
--KDF: PBKDF2HMAC (SHA256)
+1.KDF: PBKDF2HMAC (SHA256)
 
--Cycles: 480,000
+2.Cycles: 480,000
 
--Encryption standard: Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication)
+3.Encryption standard: Fernet (AES-128 in CBC mode with HMAC-SHA256 authentication)
 
--Storage Location: Handled by platformdirs: 
+4.Storage Location: Handled by platformdirs: 
 
 
-**Windows:** ``` C:\Users\<user>\AppData\Local\TokenShield ```
-**Linux:** ``` /home/<user>/.local/share/TokenShield ```
+**Windows:** ` C:\Users\<user>\AppData\Local\TokenShield `
 
+**Linux:** ` /home/<user>/.local/share/TokenShield `
+
+**macOS:** `/Users/<user>/Library/Application Support/TokenShield`
 
 ## License
 AGPL-3.0 License
